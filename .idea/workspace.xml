@@ -2,8 +2,64 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a4b2e1cd-aa2e-4762-ac5b-8d7be3d3bd45" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/index.html" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/font-icons/fonts/icomoon.eot" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/font-icons/fonts/icomoon.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/font-icons/fonts/icomoon.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/font-icons/fonts/material-ui-icons.eot" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/font-icons/fonts/material-ui-icons.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/font-icons/fonts/material-ui-icons.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/app.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/router/author.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/router/category.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/router/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/router/page.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/router/posts.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/util/error.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/util/schema.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/.babelrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/app.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/components/content/posts/posts.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/config.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/parts/app_footer.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/parts/app_header.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/parts/author_detail.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/parts/colors.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/parts/loading.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/parts/navigation_menu.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/parts/post_excerpt.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/parts/section.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/about.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/admin/admin_home.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/admin/author_admin.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/admin/category_admin.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/admin/edit_page.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/admin/edit_post.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/admin/page_admin.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/admin/post_admin.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/ajax_checker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/master.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/post.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/partial/router/post_list.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/app/router.jsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/codemirror.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/font-icons/fonts/icomoon.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/font-icons/fonts/material-ui-icons.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/font-icons/style.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/github.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/css/main.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/external/jquery.cookie.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/external/jquery.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/external/jquery.soap.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/external/sha1.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/external/xml2on.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/www/md5.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/webpack-dev-server.config.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/webpack-production.config.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
     </list>
     <ignored path="WaterEye0o.github.io.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,11 +80,41 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="github.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="github.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/github.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
+            <state relative-caret-position="225">
+              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="webpack-production.config.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/webpack-production.config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="26" column="16" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="error.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/util/error.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -37,8 +123,18 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
+            <state relative-caret-position="300">
+              <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="16" column="27" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -71,6 +167,7 @@
       <list>
         <option value="$PROJECT_DIR$/bundle/bundle.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/webpack-production.config.js" />
       </list>
     </option>
   </component>
@@ -81,8 +178,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1121" />
-    <option name="width" value="799" />
+    <option name="x" value="1017" />
+    <option name="width" value="903" />
     <option name="height" value="1080" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -140,21 +237,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WaterEye0o.github.io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WaterEye0o.github.io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="build" />
+              <option name="myItemId" value="server" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -170,8 +253,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/build" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/build" />
     </key>
   </component>
   <component name="RunManager">
@@ -245,23 +328,23 @@
       <workItem from="1487907202217" duration="4174000" />
       <workItem from="1488331479040" duration="2432000" />
       <workItem from="1490168406419" duration="138000" />
-      <workItem from="1490169178671" duration="480000" />
+      <workItem from="1490169178671" duration="2022000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7224000" />
+    <option name="totallyTimeSpent" value="8766000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1121" y="0" width="799" height="1080" extended-state="0" />
-    <editor active="false" />
+    <frame x="1017" y="0" width="903" height="1080" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28020567" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2913832" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2312253" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2312253" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -407,30 +490,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/github.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -440,5 +499,61 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build/app.js.map" />
+    <entry file="file://$PROJECT_DIR$/server/util/error.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/github.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="27" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webpack-dev-server.config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="692">
+          <caret line="54" column="22" selection-start-line="54" selection-start-column="22" selection-end-line="54" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webpack-production.config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="16" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
