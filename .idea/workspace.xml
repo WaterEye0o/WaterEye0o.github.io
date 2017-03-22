@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a4b2e1cd-aa2e-4762-ac5b-8d7be3d3bd45" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/app.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/index.html" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="WaterEye0o.github.io.iws" />
@@ -245,12 +245,12 @@
       <workItem from="1487907202217" duration="4174000" />
       <workItem from="1488331479040" duration="2432000" />
       <workItem from="1490168406419" duration="138000" />
-      <workItem from="1490169178671" duration="451000" />
+      <workItem from="1490169178671" duration="480000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7195000" />
+    <option name="totallyTimeSpent" value="7224000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1121" y="0" width="799" height="1080" extended-state="0" />
