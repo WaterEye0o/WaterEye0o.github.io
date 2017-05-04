@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-let db_url = 'mongodb://127.0.0.1:27017/material';
+let db_url = 'mongodb://120.25.225.31:20000/blog';
 mongoose.connect(db_url);
 console.log(SUCCESS + " mongoDB ready ...");
 
