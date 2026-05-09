@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日快乐！✨</title>
+    <style>
+        :root {
+            --primary-color: #ff4d6d;
+            --secondary-color: #ff758f;
+            --bg-color: #0a0a0a;
+            --text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 5rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ff4d6d, #ff758f, #ffb3c1, #ff758f, #ff4d6d);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s linear infinite, fadeInUp 1.5s ease-out;
+            text-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+        }
+
+        .message {
+            font-size: 1.5rem;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 1s forwards;
+            color: #ffb3c1;
+        }
+
+        .cake-container {
+            font-size: 4rem;
+            margin-top: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            font-size: 2rem;
+            padding: 10px;
+            user-select: none;
+            z-index: 5;
+            animation: floatUp 10s linear infinite;
+        }
+
+        @keyframes floatUp {
+            to {
+                transform: translateY(-120vh) rotate(20deg);
+            }
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+        /* 覆盖层，点击开始 */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 0.5s;
+        }
+
+        #overlay h2 {
+            font-size: 2rem;
+            color: white;
+            border: 2px solid white;
+            padding: 20px 40px;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        #overlay h2:hover {
+            background: white;
+            color: black;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <h2>点击开启惊喜 ✨</h2>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="container">
+        <h1 id="title">Happy Birthday!</h1>
+        <div class="message" id="sub-message">祝你岁岁常欢愉，年年皆胜意。</div>
+        <div class="cake-container">🎂</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const overlay = document.getElementById('overlay');
+        
+        let width, height, fireworks = [], particles = [];
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', init);
+        init();
+
+        class Firework {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = height;
+                this.sx = Math.random() * 3 - 1.5;
+                this.sy = Math.random() * -3 - 7;
+                this.size = 2;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
+            update() {
+                this.x += this.sx;
+                this.sy += 0.1;
+                this.y += this.sy;
+                if (this.sy >= 0) {
+                    this.explode();
+                    return false;
+                }
+                return true;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            explode() {
+                for (let i = 0; i < 50; i++) {
+                    particles.push(new Particle(this.x, this.y, this.color));
+                }
+            }
+        }
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.sx = Math.random() * 6 - 3;
+                this.sy = Math.random() * 6 - 3;
+                this.size = Math.random() * 2 + 1;
+                this.life = 100;
+            }
+            update() {
+                this.x += this.sx;
+                this.sy += 0.1;
+                this.y += this.sy;
+                this.life -= 1.5;
+                return this.life > 0;
+            }
+            draw() {
+                ctx.globalAlpha = this.life / 100;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.2)';
+            ctx.fillRect(0, 0, width, height);
+
+            if (Math.random() < 0.05) {
+                fireworks.push(new Firework());
+            }
+
+            fireworks = fireworks.filter(f => {
+                if (f.update()) {
+                    f.draw();
+                    return true;
+                }
+                return false;
+            });
+
+            particles = particles.filter(p => {
+                if (p.update()) {
+                    p.draw();
+                    return true;
+                }
+                return false;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            balloon.innerText = ['🎈', '💖', '✨', '🎂', '🎁'][Math.floor(Math.random() * 5)];
+            balloon.style.left = Math.random() * 100 + 'vw';
+            balloon.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            balloon.style.opacity = Math.random();
+            document.body.appendChild(balloon);
+            setTimeout(() => balloon.remove(), 10000);
+        }
+
+        overlay.addEventListener('click', () => {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                animate();
+                setInterval(createBalloon, 800);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
