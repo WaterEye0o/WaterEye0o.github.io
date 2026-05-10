@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>母亲节快乐</title>
+    <!-- 微信分享元数据 -->
+    <meta name="description" content="亲爱的妈妈，祝您母亲节快乐！">
+    <meta property="og:title" content="母亲节快乐">
+    <meta property="og:description" content="感谢您多年来的无私奉献与温柔守护。">
+    <meta property="og:image" content="https://files.manuscdn.com/user_upload_by_module/session_file/310519663281214637/axahFYeGTLCJXzft.jpg">
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <style>
+        :root {
+            --pink-light: #fff0f3;
+            --pink-medium: #ffb3c1;
+            --pink-dark: #fb6f92;
+            --text-color: #4a4a4a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'Georgia', serif;
+            background: linear-gradient(135deg, var(--pink-light) 0%, #ffffff 100%);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(251, 111, 146, 0.15);
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            animation: fadeIn 2s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--pink-dark);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .message {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: slideUp 1.5s ease-out 0.5s forwards;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #888;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 2s forwards;
+        }
+
+        .heart {
+            color: var(--pink-dark);
+            font-size: 2rem;
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        .flower-svg-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .carnation-petal {
+            fill: var(--pink-dark);
+            animation: bloom 2s ease-out forwards;
+            transform-origin: center;
+        }
+
+        @keyframes bloom {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.3); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 康乃馨粒子效果 */
+        .flower {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            user-select: none;
+            animation: falling linear forwards;
+        }
+
+        @keyframes falling {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .btn-music {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--pink-dark);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(251, 111, 146, 0.3);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .btn-music:hover {
+            transform: scale(1.05);
+            background: #e65a7d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="flower-svg-container">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- 茎 -->
+                <path d="M50 90 Q50 60 50 40" stroke="#4CAF50" stroke-width="3" fill="none" />
+                <!-- 叶子 -->
+                <path d="M50 75 Q35 70 30 60 Q40 65 50 75" fill="#4CAF50" />
+                <path d="M50 70 Q65 65 70 55 Q60 60 50 70" fill="#4CAF50" />
+                <!-- 花瓣层 -->
+                <g class="carnation-petal">
+                    <circle cx="50" cy="35" r="15" fill="#fb6f92" />
+                    <circle cx="40" cy="30" r="12" fill="#ff8fab" />
+                    <circle cx="60" cy="30" r="12" fill="#ff8fab" />
+                    <circle cx="50" cy="22" r="10" fill="#ffb3c1" />
+                    <path d="M35 35 Q25 25 35 15 Q45 25 50 35" fill="#fb6f92" />
+                    <path d="M65 35 Q75 25 65 15 Q55 25 50 35" fill="#fb6f92" />
+                    <path d="M50 35 Q50 15 65 10 Q60 25 50 35" fill="#ff8fab" />
+                    <path d="M50 35 Q50 15 35 10 Q40 25 50 35" fill="#ff8fab" />
+                </g>
+            </svg>
+        </div>
+        <h1>母亲节快乐 <span class="heart">❤️</span></h1>
+        <div class="message">
+            亲爱的妈妈：<br>
+            感谢您多年来的无私奉献与温柔守护。<br>
+            在这个温馨的节日里，愿您岁月静好，<br>
+            永远美丽、健康、快乐！
+        </div>
+        <div class="quote">
+            “上帝不能无处不在，所以创造了母亲。”
+        </div>
+    </div>
+
+    <script>
+        // 微信 JSSDK 配置示例
+        // 注意：实际使用时需要从后端获取 appId, timestamp, nonceStr, signature
+        wx.config({
+            debug: false,
+            appId: '', 
+            timestamp: 0, 
+            nonceStr: '', 
+            signature: '',
+            jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData']
+        });
+
+        wx.ready(function () {
+            const shareData = {
+                title: '母亲节快乐',
+                desc: '亲爱的妈妈，祝您母亲节快乐！感谢您多年来的无私奉献与温柔守护。',
+                link: window.location.href,
+                imgUrl: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663281214637/axahFYeGTLCJXzft.jpg'
+            };
+            wx.updateAppMessageShareData(shareData);
+            wx.updateTimelineShareData(shareData);
+        });
+
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            
+            // 随机选择康乃馨或花瓣 Emoji
+            const flowers = ['🌸', '🌺', '🌷', '🌹', '✨'];
+            flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+            
+            // 随机位置和大小
+            const startX = Math.random() * window.innerWidth;
+            const size = Math.random() * 20 + 20;
+            const duration = Math.random() * 5 + 5;
+            
+            flower.style.left = startX + 'px';
+            flower.style.fontSize = size + 'px';
+            flower.style.animationDuration = duration + 's';
+            flower.style.opacity = Math.random() * 0.5 + 0.5;
+            
+            document.body.appendChild(flower);
+            
+            // 动画结束后移除
+            setTimeout(() => {
+                flower.remove();
+            }, duration * 1000);
+        }
+
+        // 定时生成花朵
+        setInterval(createFlower, 400);
+
+        // 初始化生成一些
+        for(let i=0; i<10; i++) {
+            setTimeout(createFlower, Math.random() * 3000);
+        }
+    </script>
+</body>
+</html>
