@@ -13,13 +13,17 @@ jobs:
 
       - name: Start local RSSHub
         run: |
-          docker run -d --name rsshub -p 1200:1200 diygod/rsshub:chromium-bundled
-          for i in $(seq 1 30); do
-            if curl -s http://localhost:1200 > /dev/null 2>&1; then
+          docker run -d --name rsshub -p 1200:1200 diygod/rsshub
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:1200 > /dev/null 2>&1; then
               echo "RSSHub is ready"
               break
             fi
-            echo "Waiting for RSSHub to start... ($i/30)"
+            if [ "$i" = "60" ]; then
+              echo "RSSHub failed to start, continuing anyway (will try direct sources)"
+              break
+            fi
+            echo "Waiting for RSSHub to start... ($i/60)"
             sleep 2
           done
 

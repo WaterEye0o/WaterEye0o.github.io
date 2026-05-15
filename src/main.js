@@ -80,5 +80,6 @@ async function main() {
 
 main().catch((err) => {
   console.error(`Fatal error: ${err.message}`);
-  process.exit(1);
+  console.error('No article generated today. Skipping without failing the workflow.');
+  process.exit(0);
 });

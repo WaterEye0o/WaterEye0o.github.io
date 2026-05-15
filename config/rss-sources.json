@@ -2,16 +2,16 @@
   "base_url": "https://rsshub.app",
   "sources": [
     {
-      "name": "RSSHub-小红书宠物",
-      "path": "/xiaohongshu/search/宠物健康科普"
+      "name": "B站-宠物健康视频",
+      "path": "/bilibili/search/video/宠物健康科普"
     },
     {
-      "name": "RSSHub-知乎宠物",
-      "path": "/zhihu/search/宠物健康"
+      "name": "微博-宠物健康搜索",
+      "path": "/weibo/search/宠物健康科普"
     },
     {
-      "name": "RSSHub-今日头条宠物",
-      "path": "/toutiao/search/宠物健康科普"
+      "name": "知乎-宠物话题",
+      "path": "/zhihu/topic/19551634/hotlist"
     }
   ]
 }
