@@ -8,10 +8,13 @@ async function fetchRSS() {
   const configPath = path.join(__dirname, '..', 'config', 'rss-sources.json');
   const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 
+  const baseUrl = process.env.RSSHUB_BASE_URL || config.base_url;
+
   for (const source of config.sources) {
     try {
-      console.log(`Fetching from: ${source.name} (${source.url})`);
-      const encodedUrl = encodeURI(source.url);
+      const url = baseUrl + source.path;
+      console.log(`Fetching from: ${source.name} (${url})`);
+      const encodedUrl = encodeURI(url);
       const feed = await parser.parseURL(encodedUrl);
 
       if (feed.items && feed.items.length > 0) {

@@ -11,6 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Start local RSSHub
+        run: |
+          docker run -d --name rsshub -p 1200:1200 diygod/rsshub:chromium-bundled
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:1200 > /dev/null 2>&1; then
+              echo "RSSHub is ready"
+              break
+            fi
+            echo "Waiting for RSSHub to start... ($i/30)"
+            sleep 2
+          done
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -20,6 +32,7 @@ jobs:
       - run: node src/main.js
         env:
           MOONSHOT_API_KEY: ${{ secrets.MOONSHOT_API_KEY }}
+          RSSHUB_BASE_URL: http://localhost:1200
 
       - name: Commit new article
         run: |
