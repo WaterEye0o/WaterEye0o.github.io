@@ -60,7 +60,7 @@ package.json                   # Node.js dependencies
 ### fetch-rss.js
 
 - Uses `rss-parser` to parse RSS feeds
-- Randomly selects from configured sources, prioritizing Xiaohongshu
+- Iterates through configured sources in order, prioritizing Xiaohongshu first
 - Extracts title and content summary from the latest pet health article
 - Falls back to next source if primary fails
 
