@@ -1,0 +1,16 @@
+{
+  "sources": [
+    {
+      "name": "RSSHub-小红书宠物",
+      "url": "https://rsshub.app/xiaohongshu/search/宠物健康科普"
+    },
+    {
+      "name": "RSSHub-知乎宠物",
+      "url": "https://rsshub.app/zhihu/search/宠物健康"
+    },
+    {
+      "name": "RSSHub-今日头条宠物",
+      "url": "https://rsshub.app/toutiao/search/宠物健康科普"
+    }
+  ]
+}
