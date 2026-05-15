@@ -1,0 +1,30 @@
+name: Daily Pet Health Article
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate-article:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci
+
+      - run: node src/main.js
+        env:
+          MOONSHOT_API_KEY: ${{ secrets.MOONSHOT_API_KEY }}
+
+      - name: Commit new article
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add articles/
+          git diff --staged --quiet || git commit -m "自动生成宠物健康文章 $(date +%Y-%m-%d)"
+          git push
