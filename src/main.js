@@ -1,28 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const { fetchRSS } = require('./fetch-rss');
 const { polishArticle } = require('./polish-article');
 const { generateMarkdown } = require('./generate-markdown');
-
-function checkDuplicate(sourceUrl) {
-  const articlesDir = path.join(__dirname, '..', 'articles');
-
-  if (!fs.existsSync(articlesDir)) {
-    return false;
-  }
-
-  const files = fs.readdirSync(articlesDir).filter(f => f.endsWith('.md'));
-
-  for (const file of files) {
-    const content = fs.readFileSync(path.join(articlesDir, file), 'utf-8');
-    if (content.includes(`source_url: ${sourceUrl}`)) {
-      console.log(`Duplicate found: source_url ${sourceUrl} already in ${file}`);
-      return true;
-    }
-  }
-
-  return false;
-}
 
 function checkTodayArticle() {
   const articlesDir = path.join(__dirname, '..', 'articles');
@@ -50,30 +29,22 @@ async function main() {
     process.exit(0);
   }
 
-  console.log('Step 1: Fetching RSS...');
-  const articleData = await fetchRSS();
-
-  if (checkDuplicate(articleData.sourceUrl)) {
-    console.log('Source article already processed. Skipping.');
-    process.exit(0);
-  }
-
-  console.log('Step 2: Polishing article via Kimi...');
-  let polishedContent;
+  console.log('Step 1: Generating article via Kimi...');
+  let articleResult;
   try {
-    polishedContent = await polishArticle(articleData);
+    articleResult = await polishArticle();
   } catch (err) {
     console.warn(`First Kimi API call failed: ${err.message}. Retrying...`);
     try {
-      polishedContent = await polishArticle(articleData);
+      articleResult = await polishArticle();
     } catch (retryErr) {
       console.error(`Kimi API retry also failed: ${retryErr.message}. Aborting.`);
-      process.exit(1);
+      process.exit(0);
     }
   }
 
-  console.log('Step 3: Generating Markdown...');
-  generateMarkdown(articleData, polishedContent);
+  console.log('Step 2: Generating Markdown...');
+  generateMarkdown(articleResult);
 
   console.log('=== Article generation completed successfully ===');
 }

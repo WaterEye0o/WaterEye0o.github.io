@@ -19,8 +19,8 @@ function extractTitleFromPolished(polishedContent) {
   return 'untitled';
 }
 
-function generateMarkdown(articleData, polishedContent) {
-  const title = extractTitleFromPolished(polishedContent);
+function generateMarkdown(articleResult) {
+  const title = extractTitleFromPolished(articleResult.content);
   const today = new Date().toISOString().split('T')[0];
   const filename = `${today}-${sanitizeFilename(title)}.md`;
   const filepath = path.join(__dirname, '..', 'articles', filename);
@@ -29,14 +29,13 @@ function generateMarkdown(articleData, polishedContent) {
     '---',
     `title: ${title}`,
     `date: ${today}`,
-    `source: ${articleData.sourceName}`,
-    `source_url: ${articleData.sourceUrl}`,
+    `topic: ${articleResult.topic}`,
     `tags: [宠物健康, 科普]`,
     '---',
     '',
   ].join('\n');
 
-  const fullContent = frontMatter + polishedContent;
+  const fullContent = frontMatter + articleResult.content;
 
   fs.writeFileSync(filepath, fullContent, 'utf-8');
   console.log(`Article saved: ${filepath}`);
