@@ -3,13 +3,13 @@ const fs = require('fs');
 const path = require('path');
 
 function createClient() {
-  const apiKey = process.env.MOONSHOT_API_KEY;
+  const apiKey = process.env.AI_API_KEY;
   if (!apiKey) {
-    throw new Error('MOONSHOT_API_KEY environment variable is not set');
+    throw new Error('AI_API_KEY environment variable is not set');
   }
   return new OpenAI({
     apiKey,
-    baseURL: 'https://api.moonshot.cn/v1',
+    baseURL: 'https://api.deepseek.com/v1',
   });
 }
 
@@ -33,9 +33,9 @@ async function polishArticle() {
   const userMessage = `${promptText}\n\n今日话题：${topic}`;
 
   console.log(`Today's topic: ${topic}`);
-  console.log('Calling Kimi API to generate article...');
+  console.log('Calling DeepSeek API to generate article...');
   const response = await client.chat.completions.create({
-    model: 'moonshot-v1-8k',
+    model: 'deepseek-chat',
     messages: [
       { role: 'system', content: '你是一位专业的宠物健康科普公众号编辑，擅长撰写通俗易懂、科学准确的宠物健康科普文章。' },
       { role: 'user', content: userMessage },
@@ -45,7 +45,7 @@ async function polishArticle() {
   });
 
   const content = response.choices[0].message.content;
-  console.log('Kimi API article generation completed successfully');
+  console.log('DeepSeek API article generation completed successfully');
   return { content, topic };
 }
 

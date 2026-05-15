@@ -19,7 +19,7 @@ jobs:
 
       - run: node src/main.js
         env:
-          MOONSHOT_API_KEY: ${{ secrets.MOONSHOT_API_KEY }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
 
       - name: Commit new article
         run: |

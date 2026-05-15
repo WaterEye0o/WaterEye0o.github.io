@@ -34,11 +34,11 @@ async function main() {
   try {
     articleResult = await polishArticle();
   } catch (err) {
-    console.warn(`First Kimi API call failed: ${err.message}. Retrying...`);
+    console.warn(`First AI API call failed: ${err.message}. Retrying...`);
     try {
       articleResult = await polishArticle();
     } catch (retryErr) {
-      console.error(`Kimi API retry also failed: ${retryErr.message}. Aborting.`);
+      console.error(`AI API retry also failed: ${retryErr.message}. Aborting.`);
       process.exit(0);
     }
   }
