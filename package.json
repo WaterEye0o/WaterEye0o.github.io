@@ -1,0 +1,13 @@
+{
+  "name": "pet-health-article-generator",
+  "version": "1.0.0",
+  "description": "Auto-generate pet health WeChat OA articles from RSS sources via Kimi AI",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "dependencies": {
+    "rss-parser": "^3.13.0",
+    "openai": "^4.78.0"
+  }
+}
