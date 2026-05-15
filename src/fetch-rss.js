@@ -11,7 +11,8 @@ async function fetchRSS() {
   for (const source of config.sources) {
     try {
       console.log(`Fetching from: ${source.name} (${source.url})`);
-      const feed = await parser.parseURL(source.url);
+      const encodedUrl = encodeURI(source.url);
+      const feed = await parser.parseURL(encodedUrl);
 
       if (feed.items && feed.items.length > 0) {
         const item = feed.items[0];
