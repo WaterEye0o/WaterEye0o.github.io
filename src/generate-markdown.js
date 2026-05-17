@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { processImagesInArticle } = require('./search-images');
 
 function sanitizeFilename(title) {
   return title
@@ -19,11 +20,15 @@ function extractTitleFromPolished(polishedContent) {
   return 'untitled';
 }
 
-function generateMarkdown(articleResult) {
+async function generateMarkdown(articleResult) {
   const title = extractTitleFromPolished(articleResult.content);
   const today = new Date().toISOString().split('T')[0];
-  const filename = `${today}-${sanitizeFilename(title)}.md`;
+  const slug = sanitizeFilename(title);
+  const filename = `${today}-${slug}.md`;
   const filepath = path.join(__dirname, '..', 'articles', filename);
+
+  console.log('Step 3: Searching and downloading images...');
+  const contentWithImages = await processImagesInArticle(articleResult.content, slug);
 
   const frontMatter = [
     '---',
@@ -35,7 +40,7 @@ function generateMarkdown(articleResult) {
     '',
   ].join('\n');
 
-  const fullContent = frontMatter + articleResult.content;
+  const fullContent = frontMatter + contentWithImages;
 
   fs.writeFileSync(filepath, fullContent, 'utf-8');
   console.log(`Article saved: ${filepath}`);

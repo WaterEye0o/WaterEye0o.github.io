@@ -44,7 +44,7 @@ async function main() {
   }
 
   console.log('Step 2: Generating Markdown...');
-  generateMarkdown(articleResult);
+  await generateMarkdown(articleResult);
 
   console.log('=== Article generation completed successfully ===');
 }

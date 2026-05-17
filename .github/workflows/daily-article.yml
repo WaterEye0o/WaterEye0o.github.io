@@ -20,11 +20,12 @@ jobs:
       - run: node src/main.js
         env:
           AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
 
       - name: Commit new article
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add articles/
+          git add articles/ images/
           git diff --staged --quiet || git commit -m "自动生成宠物健康文章 $(date +%Y-%m-%d)"
           git push
