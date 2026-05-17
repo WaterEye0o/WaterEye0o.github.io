@@ -1,13 +1,27 @@
 {
   "name": "pet-health-article-generator",
   "version": "1.0.0",
+  "hexo": {
+    "version": "7.3.0"
+  },
   "description": "Auto-generate pet health WeChat OA articles from RSS sources via Kimi AI",
   "main": "src/main.js",
   "scripts": {
-    "start": "node src/main.js"
+    "start": "node src/main.js",
+    "build": "hexo generate",
+    "clean": "hexo clean",
+    "server": "hexo server"
   },
   "dependencies": {
     "rss-parser": "^3.13.0",
-    "openai": "^4.78.0"
+    "openai": "^4.78.0",
+    "hexo": "^7.3.0",
+    "hexo-cli": "^4.3.2",
+    "hexo-theme-next": "^8.21.0",
+    "hexo-renderer-marked": "^6.3.0",
+    "hexo-renderer-stylus": "^3.0.1",
+    "hexo-generator-index": "^4.0.0",
+    "hexo-generator-archive": "^2.0.0",
+    "hexo-generator-tag": "^2.0.0"
   }
 }

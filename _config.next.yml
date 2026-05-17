@@ -1,0 +1,44 @@
+# NexT theme configuration
+# Documentation: https://theme-next.js.org/
+
+scheme: Pisces
+
+menu:
+  home: / || fa fa-home
+  archives: /archives/ || fa fa-archive
+  tags: /tags/ || fa fa-tags
+
+social:
+  GitHub: https://github.com/WaterEye0o || fab fa-github
+
+favicon:
+  small: /images/favicon-16x16-next.png
+  medium: /images/favicon-32x32-next.png
+  apple_touch_icon: /images/apple-touch-icon-next.png
+  safari_pinned_tab: /images/logo.svg
+
+# Disable features not needed for a simple blog
+comments:
+  enable: false
+
+local_search:
+  enable: true
+
+back2top:
+  enable: true
+
+# Code highlight
+codeblock:
+  copy_button:
+    enable: true
+
+# Keep minimal
+
+footer:
+  since: 2018
+
+# Post settings
+post_meta:
+  created_at: true
+  updated_at: true
+  categories: false

@@ -1,1 +1,5 @@
+public/
+.deploy_git/
 node_modules/
+*.log
+db.json

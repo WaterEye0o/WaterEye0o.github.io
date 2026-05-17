@@ -1,0 +1,236 @@
+const fs = require('fs');
+const path = require('path');
+const {
+  requestAccessToken,
+  uploadImage,
+  uploadThumbMedia,
+  addDraft,
+} = require('./wechat-api');
+
+function parseArticle(filePath) {
+  const content = fs.readFileSync(filePath, 'utf-8');
+
+  const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n/);
+  let frontmatter = {};
+  let body = content;
+
+  if (frontmatterMatch) {
+    const fmText = frontmatterMatch[1];
+    body = content.substring(frontmatterMatch[0].length);
+
+    for (const line of fmText.split('\n')) {
+      const colonIndex = line.indexOf(':');
+      if (colonIndex > 0) {
+        const key = line.substring(0, colonIndex).trim();
+        let value = line.substring(colonIndex + 1).trim();
+        if (value.startsWith('"') && value.endsWith('"')) {
+          value = value.slice(1, -1);
+        }
+        frontmatter[key] = value;
+      }
+    }
+  }
+
+  // Extract local image paths from body
+  const imgRegex = /<img[^>]+src="(\/images\/[^"]+)"[^>]*>/g;
+  const localImages = [];
+  let match;
+  while ((match = imgRegex.exec(body)) !== null) {
+    localImages.push(match[1]);
+  }
+
+  // Remove H1 title from body (title is sent separately)
+  body = body.replace(/^#\s+.+?\n+/, '');
+
+  return {
+    title: frontmatter.title || '',
+    topic: frontmatter.topic || '',
+    date: frontmatter.date || '',
+    body,
+    localImages: [...new Set(localImages)],
+  };
+}
+
+function applyInlineFormatting(text) {
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  return text;
+}
+
+function convertContentToHtml(body, imageUrlMap) {
+  let content = body;
+  for (const [localPath, wechatUrl] of Object.entries(imageUrlMap)) {
+    const escaped = localPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    content = content.replace(new RegExp(escaped, 'g'), wechatUrl);
+  }
+
+  const lines = content.split('\n');
+  const htmlLines = [];
+  let inList = false;
+  let listType = null;
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    const trimmed = line.trim();
+
+    // Skip figure wrapper tags and figcaption content
+    if (trimmed.startsWith('<figure')) continue;
+    if (trimmed.startsWith('</figure>')) continue;
+    if (trimmed.startsWith('<figcaption')) {
+      while (i < lines.length && !lines[i].trim().startsWith('</figcaption>')) i++;
+      continue;
+    }
+    if (trimmed.startsWith('</figcaption>')) continue;
+    if (trimmed.startsWith('<small>')) continue;
+    if (trimmed.startsWith('</small>')) continue;
+
+    // Headings
+    if (line.startsWith('#### ')) {
+      if (inList) { htmlLines.push(`</${listType}>`); inList = false; }
+      htmlLines.push(`<h4>${applyInlineFormatting(line.substring(5))}</h4>`);
+      continue;
+    }
+    if (line.startsWith('### ')) {
+      if (inList) { htmlLines.push(`</${listType}>`); inList = false; }
+      htmlLines.push(`<h3>${applyInlineFormatting(line.substring(4))}</h3>`);
+      continue;
+    }
+    if (line.startsWith('## ')) {
+      if (inList) { htmlLines.push(`</${listType}>`); inList = false; }
+      htmlLines.push(`<h2>${applyInlineFormatting(line.substring(3))}</h2>`);
+      continue;
+    }
+
+    // Blockquote
+    if (line.startsWith('> ')) {
+      if (inList) { htmlLines.push(`</${listType}>`); inList = false; }
+      htmlLines.push(`<p>${applyInlineFormatting(line.substring(2))}</p>`);
+      continue;
+    }
+
+    // Unordered list
+    if (line.startsWith('- ')) {
+      if (!inList || listType !== 'ul') {
+        if (inList) htmlLines.push(`</${listType}>`);
+        htmlLines.push('<ul>');
+        inList = true;
+        listType = 'ul';
+      }
+      htmlLines.push(`<li>${applyInlineFormatting(line.substring(2))}</li>`);
+      continue;
+    }
+
+    // Ordered list
+    if (/^\d+\.\s/.test(line)) {
+      if (!inList || listType !== 'ol') {
+        if (inList) htmlLines.push(`</${listType}>`);
+        htmlLines.push('<ol>');
+        inList = true;
+        listType = 'ol';
+      }
+      const text = line.replace(/^\d+\.\s/, '');
+      htmlLines.push(`<li>${applyInlineFormatting(text)}</li>`);
+      continue;
+    }
+
+    // End lists on non-empty, non-list line
+    if (inList && trimmed !== '') {
+      htmlLines.push(`</${listType}>`);
+      inList = false;
+      listType = null;
+    }
+
+    // Empty line
+    if (trimmed === '') {
+      htmlLines.push('<br/>');
+      continue;
+    }
+
+    // HTML tags (img, etc.) pass through without wrapping
+    if (trimmed.startsWith('<')) {
+      htmlLines.push(trimmed);
+    } else {
+      htmlLines.push(`<p>${applyInlineFormatting(line)}</p>`);
+    }
+  }
+
+  if (inList) {
+    htmlLines.push(`</${listType}>`);
+  }
+
+  return htmlLines.join('\n');
+}
+
+async function publishArticle(articlePath) {
+  const appId = process.env.WECHAT_APPID;
+  const appSecret = process.env.WECHAT_APPSECRET;
+
+  if (!appId || !appSecret) {
+    console.warn('WeChat publishing skipped: WECHAT_APPID or WECHAT_APPSECRET not set');
+    return;
+  }
+
+  console.log('Publishing to WeChat draft...');
+
+  // Step 1: Parse article
+  const article = parseArticle(articlePath);
+  console.log(`  Title: ${article.title}`);
+  console.log(`  Images: ${article.localImages.length}`);
+
+  // Step 2: Get access token
+  console.log('  Requesting access token...');
+  const accessToken = await requestAccessToken(appId, appSecret);
+  console.log('  ✓ Access token obtained');
+
+  // Step 3: Upload body images
+  const imageUrlMap = {};
+  if (article.localImages.length > 0) {
+    console.log('  Uploading images to WeChat...');
+    for (const relativePath of article.localImages) {
+      const localPath = path.join(__dirname, '..', relativePath);
+      console.log(`    Uploading ${relativePath}...`);
+      const wechatUrl = await uploadImage(accessToken, localPath);
+      imageUrlMap[relativePath] = wechatUrl;
+      console.log('    ✓ Uploaded');
+    }
+  }
+
+  // Step 4: Upload thumb media (use first image)
+  let thumbMediaId = '';
+  if (article.localImages.length > 0) {
+    const firstLocalPath = path.join(__dirname, '..', article.localImages[0]);
+    console.log('  Uploading thumb media...');
+    const thumbResult = await uploadThumbMedia(accessToken, firstLocalPath);
+    thumbMediaId = thumbResult.mediaId;
+    console.log('  ✓ Thumb media uploaded');
+  }
+
+  // Step 5: Convert content to HTML
+  const content = convertContentToHtml(article.body, imageUrlMap);
+
+  // Step 6: Generate digest (first 100 chars of plain text)
+  const plainText = content.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  const digest = plainText.substring(0, 100);
+
+  // Step 7: Create draft
+  const draftArticle = {
+    title: article.title,
+    author: process.env.WECHAT_AUTHOR || '',
+    digest,
+    content,
+    content_source_url: '',
+    thumb_media_id: thumbMediaId,
+    need_open_comment: 0,
+    only_fans_can_comment: 0,
+  };
+
+  console.log('  Creating draft...');
+  const mediaId = await addDraft(accessToken, draftArticle);
+  console.log(`  ✓ Draft created successfully: ${mediaId}`);
+}
+
+module.exports = {
+  publishArticle,
+  parseArticle,
+  convertContentToHtml,
+};

@@ -44,7 +44,15 @@ async function main() {
   }
 
   console.log('Step 2: Generating Markdown...');
-  await generateMarkdown(articleResult);
+  const filepath = await generateMarkdown(articleResult);
+
+  console.log('Step 3: Publishing to WeChat...');
+  try {
+    const { publishArticle } = require('./publish-to-wechat');
+    await publishArticle(filepath);
+  } catch (err) {
+    console.error(`WeChat publish failed: ${err.message}`);
+  }
 
   console.log('=== Article generation completed successfully ===');
 }
