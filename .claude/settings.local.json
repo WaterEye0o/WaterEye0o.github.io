@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rsync -avz -e \"ssh -i /Users/wuhuabin/WorkSpace/project/dogChat/keys/cline.pem -o StrictHostKeyChecking=no\" /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io/proxy-server/ root@47.94.222.221:/root/proxy-server/)",
+      "Bash(ssh -i /Users/wuhuabin/WorkSpace/project/dogChat/keys/cline.pem -o StrictHostKeyChecking=no root@47.94.222.221 \"mkdir -p /root/proxy-server\")",
+      "Bash(scp -i /Users/wuhuabin/WorkSpace/project/dogChat/keys/cline.pem -o StrictHostKeyChecking=no /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io/proxy-server/* root@47.94.222.221:/root/proxy-server/)",
+      "Bash(ssh -i /Users/wuhuabin/WorkSpace/project/dogChat/keys/cline.pem -o StrictHostKeyChecking=no root@47.94.222.221 \"ls -la /root/proxy-server/\")",
+      "Bash(ssh -i /Users/wuhuabin/WorkSpace/project/dogChat/keys/cline.pem -o StrictHostKeyChecking=no root@47.94.222.221 \"mkdir -p /root/src\")",
+      "Bash(scp -i /Users/wuhuabin/WorkSpace/project/dogChat/keys/cline.pem -o StrictHostKeyChecking=no /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io/src/* root@47.94.222.221:/root/src/)",
+      "Bash(ssh -i /Users/wuhuabin/WorkSpace/project/dogChat/keys/cline.pem -o StrictHostKeyChecking=no root@47.94.222.221 \"ls -la /root/src/ && which node && node --version\")",
+      "Bash(ssh -i /Users/wuhuabin/WorkSpace/project/dogChat/keys/cline.pem -o StrictHostKeyChecking=no root@47.94.222.221 \"curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && yum install -y nodejs\")",
+      "Bash(ssh -i /Users/wuhuabin/WorkSpace/project/dogChat/keys/cline.pem -o StrictHostKeyChecking=no root@47.94.222.221 \"npm install -g pm2\")",
+      "Bash(ssh -i *)",
+      "Skill(superpowers:systematic-debugging)",
+      "Skill(superpowers:systematic-debugging:*)",
+      "Bash(gh secret *)"
+    ]
+  }
+}
