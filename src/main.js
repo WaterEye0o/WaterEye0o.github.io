@@ -2,30 +2,42 @@ const fs = require('fs');
 const path = require('path');
 const { polishArticle } = require('./polish-article');
 const { generateMarkdown } = require('./generate-markdown');
+const { publishArticle } = require('./publish-to-wechat');
 
-function checkTodayArticle() {
+function getTodayArticlePath() {
   const articlesDir = path.join(__dirname, '..', 'articles');
   const today = new Date().toISOString().split('T')[0];
 
   if (!fs.existsSync(articlesDir)) {
-    return false;
+    return null;
   }
 
   const files = fs.readdirSync(articlesDir).filter(f => f.startsWith(today) && f.endsWith('.md'));
 
   if (files.length > 0) {
-    console.log(`Today's article already exists: ${files[0]}`);
-    return true;
+    return path.join(articlesDir, files[0]);
   }
 
-  return false;
+  return null;
 }
 
 async function main() {
   console.log('=== Pet Health Article Generator ===');
 
-  if (checkTodayArticle()) {
-    console.log('Today\'s article already generated. Skipping.');
+  const existingArticle = getTodayArticlePath();
+
+  if (existingArticle) {
+    console.log(`Today's article already exists: ${path.basename(existingArticle)}`);
+
+    // 即使文章已存在，仍然发布到微信草稿
+    console.log('Step 1: Publishing to WeChat...');
+    try {
+      await publishArticle(existingArticle);
+    } catch (err) {
+      console.error(`WeChat publish failed: ${err.message}`);
+    }
+
+    console.log('=== Article published to WeChat draft ===');
     process.exit(0);
   }
 
@@ -48,7 +60,6 @@ async function main() {
 
   console.log('Step 3: Publishing to WeChat...');
   try {
-    const { publishArticle } = require('./publish-to-wechat');
     await publishArticle(filepath);
   } catch (err) {
     console.error(`WeChat publish failed: ${err.message}`);
