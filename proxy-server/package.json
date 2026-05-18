@@ -1,0 +1,12 @@
+{
+  "name": "wechat-proxy-server",
+  "version": "1.0.0",
+  "description": "Proxy server for publishing WeChat Official Account drafts from GitHub Actions",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

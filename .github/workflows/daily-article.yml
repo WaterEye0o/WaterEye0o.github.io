@@ -30,8 +30,8 @@ jobs:
         env:
           AI_API_KEY: ${{ secrets.AI_API_KEY }}
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
-          WECHAT_APPID: ${{ secrets.WECHAT_APPID }}
-          WECHAT_APPSECRET: ${{ secrets.WECHAT_APPSECRET }}
+          WECHAT_PROXY_URL: ${{ secrets.WECHAT_PROXY_URL }}
+          WECHAT_PROXY_SECRET: ${{ secrets.WECHAT_PROXY_SECRET }}
           WECHAT_AUTHOR: ${{ secrets.WECHAT_AUTHOR }}
 
       - name: Commit new article

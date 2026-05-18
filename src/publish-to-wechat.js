@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
+const http = require('http');
 const {
   requestAccessToken,
   uploadImage,
@@ -161,7 +163,93 @@ function convertContentToHtml(body, imageUrlMap) {
   return htmlLines.join('\n');
 }
 
+async function publishViaProxy(articlePath) {
+  const proxyUrl = process.env.WECHAT_PROXY_URL;
+  const proxySecret = process.env.WECHAT_PROXY_SECRET;
+
+  if (!proxySecret) {
+    throw new Error('WECHAT_PROXY_SECRET is required when using WECHAT_PROXY_URL');
+  }
+
+  const article = parseArticle(articlePath);
+  console.log(`  Title: ${article.title}`);
+  console.log(`  Images: ${article.localImages.length}`);
+
+  const imageFiles = [];
+  for (const relativePath of article.localImages) {
+    const localPath = path.join(__dirname, '..', relativePath);
+    if (!fs.existsSync(localPath)) {
+      console.warn(`    Image not found: ${localPath}`);
+      continue;
+    }
+    const data = fs.readFileSync(localPath).toString('base64');
+    imageFiles.push({
+      localPath: relativePath,
+      filename: path.basename(localPath),
+      data,
+    });
+  }
+
+  const content = convertContentToHtml(article.body, {});
+
+  const payload = {
+    title: article.title,
+    content,
+    author: process.env.WECHAT_AUTHOR || '',
+    imageFiles,
+  };
+
+  const postData = JSON.stringify(payload);
+  const url = new URL(proxyUrl);
+  const client = url.protocol === 'https:' ? https : http;
+
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: url.hostname,
+      port: url.port || (url.protocol === 'https:' ? 443 : 80),
+      path: url.pathname + url.search,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${proxySecret}`,
+        'Content-Length': Buffer.byteLength(postData),
+      },
+    };
+
+    const req = client.request(options, (res) => {
+      const chunks = [];
+      res.on('data', (chunk) => chunks.push(chunk));
+      res.on('end', () => {
+        const text = Buffer.concat(chunks).toString('utf-8');
+        try {
+          const data = JSON.parse(text);
+          if (!data.success) {
+            reject(new Error(data.error || 'Proxy publish failed'));
+          } else {
+            resolve(data.mediaId);
+          }
+        } catch (e) {
+          reject(new Error(`Invalid proxy response: ${text}`));
+        }
+      });
+    });
+
+    req.on('error', reject);
+    req.write(postData);
+    req.end();
+  });
+}
+
 async function publishArticle(articlePath) {
+  const proxyUrl = process.env.WECHAT_PROXY_URL;
+
+  if (proxyUrl) {
+    console.log('Publishing to WeChat via proxy...');
+    const mediaId = await publishViaProxy(articlePath);
+    console.log(`  ✓ Draft created via proxy: ${mediaId}`);
+    return;
+  }
+
   const appId = process.env.WECHAT_APPID;
   const appSecret = process.env.WECHAT_APPSECRET;
 
