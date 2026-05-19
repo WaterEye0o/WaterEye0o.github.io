@@ -139,9 +139,23 @@ async function addDraft(accessToken, article) {
   return data.media_id;
 }
 
+async function publishDraft(accessToken, mediaId) {
+  const url = `https://api.weixin.qq.com/cgi-bin/freepublish/submit?access_token=${accessToken}`;
+  const response = await httpPostJson(url, { media_id: mediaId });
+  const data = JSON.parse(response.text);
+  if (data.errcode) {
+    throw new Error(`WeChat freepublish/submit error ${data.errcode}: ${data.errmsg}`);
+  }
+  if (!data.publish_id) {
+    throw new Error(`Failed to publish draft: ${response.text}`);
+  }
+  return data.publish_id;
+}
+
 module.exports = {
   requestAccessToken,
   uploadImage,
   uploadThumbMedia,
   addDraft,
+  publishDraft,
 };

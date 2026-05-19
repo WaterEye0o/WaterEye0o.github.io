@@ -88,6 +88,8 @@ In your GitHub repository, go to **Settings** -> **Secrets and variables** -> **
 
 Keep `WECHAT_AUTHOR` if you were using it.
 
+3. **(Optional) Enable direct publish**: Add a new secret `WECHAT_DIRECT_PUBLISH` and set it to `true`. When enabled, articles will be published immediately after draft creation, skipping the manual review step in the WeChat MP backend.
+
 ## API Endpoint
 
 ### `POST /api/publish-wechat-draft`
@@ -119,9 +121,36 @@ Authorization: Bearer <WECHAT_PROXY_SECRET>
 { "success": true, "mediaId": "MEDIA_ID" }
 ```
 
+**Response (success with publish enabled):**
+```json
+{ "success": true, "mediaId": "MEDIA_ID", "publishId": "PUBLISH_ID" }
+```
+
 **Response (error):**
 ```json
 { "success": false, "error": "error message" }
+```
+
+### `POST /api/publish-draft`
+
+Publish an existing WeChat draft article directly.
+
+**Headers:**
+```
+Content-Type: application/json
+Authorization: Bearer <WECHAT_PROXY_SECRET>
+```
+
+**Body:**
+```json
+{
+  "mediaId": "MEDIA_ID"
+}
+```
+
+**Response (success):**
+```json
+{ "success": true, "mediaId": "MEDIA_ID", "publishId": "PUBLISH_ID" }
 ```
 
 ## Local Testing

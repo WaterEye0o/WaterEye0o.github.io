@@ -197,6 +197,7 @@ async function publishViaProxy(articlePath) {
     content,
     author: process.env.WECHAT_AUTHOR || '',
     imageFiles,
+    publish: process.env.WECHAT_DIRECT_PUBLISH === 'true',
   };
 
   const postData = JSON.stringify(payload);
@@ -226,7 +227,7 @@ async function publishViaProxy(articlePath) {
           if (!data.success) {
             reject(new Error(data.error || 'Proxy publish failed'));
           } else {
-            resolve(data.mediaId);
+            resolve(data);
           }
         } catch (e) {
           reject(new Error(`Invalid proxy response: ${text}`));
@@ -245,8 +246,11 @@ async function publishArticle(articlePath) {
 
   if (proxyUrl) {
     console.log('Publishing to WeChat via proxy...');
-    const mediaId = await publishViaProxy(articlePath);
-    console.log(`  ✓ Draft created via proxy: ${mediaId}`);
+    const result = await publishViaProxy(articlePath);
+    console.log(`  ✓ Draft created via proxy: ${result.mediaId}`);
+    if (result.publishId) {
+      console.log(`  ✓ Article published: ${result.publishId}`);
+    }
     return;
   }
 

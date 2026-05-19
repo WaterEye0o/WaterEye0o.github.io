@@ -8,6 +8,7 @@ const {
   uploadImage,
   uploadThumbMedia,
   addDraft,
+  publishDraft,
 } = require('../src/wechat-api');
 
 const PROXY_SECRET = process.env.WECHAT_PROXY_SECRET;
@@ -97,7 +98,13 @@ async function handlePublish(body) {
 
   const mediaId = await addDraft(accessToken, draftArticle);
 
-  // 7. Clean up temp files
+  // 7. Publish if requested
+  let publishId = null;
+  if (body.publish === true) {
+    publishId = await publishDraft(accessToken, mediaId);
+  }
+
+  // 8. Clean up temp files
   for (const tmpFile of tmpFiles) {
     try {
       fs.unlinkSync(tmpFile);
@@ -106,13 +113,23 @@ async function handlePublish(body) {
     }
   }
 
-  return mediaId;
+  return { mediaId, publishId };
+}
+
+async function handlePublishExisting(body) {
+  if (!body.mediaId) {
+    throw new Error('Missing required field: mediaId');
+  }
+
+  const accessToken = await requestAccessToken(APPID, APPSECRET);
+  const publishId = await publishDraft(accessToken, body.mediaId);
+  return { mediaId: body.mediaId, publishId };
 }
 
 const server = http.createServer(async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
 
-  if (req.method !== 'POST' || req.url !== '/api/publish-wechat-draft') {
+  if (req.method !== 'POST') {
     res.statusCode = 404;
     res.end(JSON.stringify({ success: false, error: 'Not found' }));
     return;
@@ -126,9 +143,20 @@ const server = http.createServer(async (req, res) => {
 
   try {
     const body = await parseJsonBody(req);
-    const mediaId = await handlePublish(body);
+    let result;
+
+    if (req.url === '/api/publish-wechat-draft') {
+      result = await handlePublish(body);
+    } else if (req.url === '/api/publish-draft') {
+      result = await handlePublishExisting(body);
+    } else {
+      res.statusCode = 404;
+      res.end(JSON.stringify({ success: false, error: 'Not found' }));
+      return;
+    }
+
     res.statusCode = 200;
-    res.end(JSON.stringify({ success: true, mediaId }));
+    res.end(JSON.stringify({ success: true, ...result }));
   } catch (err) {
     console.error('Proxy publish error:', err.message);
     res.statusCode = 500;
