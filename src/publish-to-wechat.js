@@ -54,8 +54,8 @@ function parseArticle(filePath) {
 }
 
 function applyInlineFormatting(text) {
-  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  text = text.replace(/\*\*(.+?)\*\*/g, '<span style="font-weight:bold;">$1</span>');
+  text = text.replace(/\*(.+?)\*/g, '<span style="font-style:italic;">$1</span>');
   return text;
 }
 
@@ -194,7 +194,7 @@ function convertContentToHtml(body, imageUrlMap) {
     htmlLines.push(`</${listType}>`);
   }
 
-  return htmlLines.join('\n');
+  return htmlLines.join('');
 }
 
 async function publishViaProxy(articlePath) {
