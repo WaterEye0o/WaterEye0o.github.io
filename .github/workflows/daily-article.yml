@@ -33,6 +33,7 @@ jobs:
           WECHAT_PROXY_URL: ${{ secrets.WECHAT_PROXY_URL }}
           WECHAT_PROXY_SECRET: ${{ secrets.WECHAT_PROXY_SECRET }}
           WECHAT_AUTHOR: ${{ secrets.WECHAT_AUTHOR }}
+          WECHAT_DIRECT_PUBLISH: ${{ secrets.WECHAT_DIRECT_PUBLISH }}
 
       - name: Commit new article
         run: |
