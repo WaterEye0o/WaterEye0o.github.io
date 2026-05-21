@@ -75,8 +75,38 @@ function convertContentToHtml(body, imageUrlMap) {
     let line = lines[i];
     const trimmed = line.trim();
 
-    // Skip figure wrapper tags and figcaption content
-    if (trimmed.startsWith('<figure')) continue;
+    // Skip horizontal rules
+    if (trimmed === '---' || trimmed === '***' || trimmed === '___') {
+      if (inList) { htmlLines.push(`</${listType}>`); inList = false; listType = null; }
+      continue;
+    }
+
+    // Extract image + caption from figure blocks
+    if (trimmed.startsWith('<figure')) {
+      const figureLines = [];
+      while (i < lines.length && !lines[i].trim().startsWith('</figure>')) {
+        figureLines.push(lines[i]);
+        i++;
+      }
+      const figureBlock = figureLines.join('\n');
+      const imgMatch = figureBlock.match(/<img[^>]+>/);
+      if (imgMatch) {
+        htmlLines.push(imgMatch[0]);
+      }
+      const captionMatch = figureBlock.match(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/);
+      if (captionMatch) {
+        let caption = captionMatch[1]
+          .replace(/<br\s*\/?>/gi, '\n')
+          .replace(/<small>[\s\S]*?<\/small>/gi, '')
+          .replace(/<[^>]+>/g, '')
+          .trim();
+        if (caption) {
+          htmlLines.push(`<p style="text-align:center;color:#888;font-size:14px;margin-top:8px;">${caption}</p>`);
+        }
+      }
+      if (inList) { htmlLines.push(`</${listType}>`); inList = false; listType = null; }
+      continue;
+    }
     if (trimmed.startsWith('</figure>')) continue;
     if (trimmed.startsWith('<figcaption')) {
       while (i < lines.length && !lines[i].trim().startsWith('</figcaption>')) i++;
@@ -135,17 +165,21 @@ function convertContentToHtml(body, imageUrlMap) {
       continue;
     }
 
-    // End lists on non-empty, non-list line
-    if (inList && trimmed !== '') {
+    // Empty line — close any open list, but don't output <br/>
+    if (trimmed === '') {
+      if (inList) {
+        htmlLines.push(`</${listType}>`);
+        inList = false;
+        listType = null;
+      }
+      continue;
+    }
+
+    // Non-empty, non-list line ends any active list
+    if (inList) {
       htmlLines.push(`</${listType}>`);
       inList = false;
       listType = null;
-    }
-
-    // Empty line
-    if (trimmed === '') {
-      htmlLines.push('<br/>');
-      continue;
     }
 
     // HTML tags (img, etc.) pass through without wrapping
