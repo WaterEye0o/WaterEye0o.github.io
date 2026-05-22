@@ -54,8 +54,12 @@ function parseArticle(filePath) {
 }
 
 function applyInlineFormatting(text) {
-  text = text.replace(/\*\*(.+?)\*\*/g, '<span style="font-weight:bold;">$1</span>');
-  text = text.replace(/\*(.+?)\*/g, '<span style="font-style:italic;">$1</span>');
+  text = text.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  text = text.replace(/\*(.+?)\*/g, '<i>$1</i>');
+  // WeChat 编辑器会在样式边界处分段；把紧跟加粗的中文标点吞进 <b> 里，避免换行
+  text = text.replace(/<\/b>([：:；，。、！？])/g, '$1</b>');
+  // 在 </b> 和中文字符之间插入零宽空格，尝试阻止 WeChat 在样式边界强制换行
+  text = text.replace(/<\/b>([^<\s])/g, '</b>&#8203;$1');
   return text;
 }
 
