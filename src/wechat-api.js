@@ -152,10 +152,34 @@ async function publishDraft(accessToken, mediaId) {
   return data.publish_id;
 }
 
+async function massSend(accessToken, mediaId) {
+  const url = `https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token=${accessToken}`;
+  const payload = {
+    filter: {
+      is_to_all: true,
+    },
+    mpnews: {
+      media_id: mediaId,
+    },
+    msgtype: 'mpnews',
+    send_ignore_reprint: 0,
+  };
+  const response = await httpPostJson(url, payload);
+  const data = JSON.parse(response.text);
+  if (data.errcode) {
+    throw new Error(`WeChat mass/sendall error ${data.errcode}: ${data.errmsg}`);
+  }
+  if (!data.msg_id) {
+    throw new Error(`Failed to mass send: ${response.text}`);
+  }
+  return data.msg_id;
+}
+
 module.exports = {
   requestAccessToken,
   uploadImage,
   uploadThumbMedia,
   addDraft,
   publishDraft,
+  massSend,
 };

@@ -286,8 +286,8 @@ async function publishArticle(articlePath) {
     console.log('Publishing to WeChat via proxy...');
     const result = await publishViaProxy(articlePath);
     console.log(`  ✓ Draft created via proxy: ${result.mediaId}`);
-    if (result.publishId) {
-      console.log(`  ✓ Article published: ${result.publishId}`);
+    if (result.msgId) {
+      console.log(`  ✓ Article mass sent: ${result.msgId}`);
     }
     return;
   }

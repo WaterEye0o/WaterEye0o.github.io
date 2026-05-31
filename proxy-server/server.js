@@ -8,7 +8,7 @@ const {
   uploadImage,
   uploadThumbMedia,
   addDraft,
-  publishDraft,
+  massSend,
 } = require('../src/wechat-api');
 
 const PROXY_SECRET = process.env.WECHAT_PROXY_SECRET;
@@ -98,10 +98,10 @@ async function handlePublish(body) {
 
   const mediaId = await addDraft(accessToken, draftArticle);
 
-  // 7. Publish if requested
-  let publishId = null;
+  // 7. Mass send if requested
+  let msgId = null;
   if (body.publish === true) {
-    publishId = await publishDraft(accessToken, mediaId);
+    msgId = await massSend(accessToken, mediaId);
   }
 
   // 8. Clean up temp files
@@ -113,7 +113,7 @@ async function handlePublish(body) {
     }
   }
 
-  return { mediaId, publishId };
+  return { mediaId, msgId };
 }
 
 async function handlePublishExisting(body) {
@@ -122,8 +122,8 @@ async function handlePublishExisting(body) {
   }
 
   const accessToken = await requestAccessToken(APPID, APPSECRET);
-  const publishId = await publishDraft(accessToken, body.mediaId);
-  return { mediaId: body.mediaId, publishId };
+  const msgId = await massSend(accessToken, body.mediaId);
+  return { mediaId: body.mediaId, msgId };
 }
 
 const server = http.createServer(async (req, res) => {
