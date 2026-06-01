@@ -287,7 +287,7 @@ async function publishArticle(articlePath) {
     const result = await publishViaProxy(articlePath);
     console.log(`  ✓ Draft created via proxy: ${result.mediaId}`);
     if (result.msgId) {
-      console.log(`  ✓ Article mass sent: ${result.msgId}`);
+      console.log(`  ✓ Article mass sent: msg_id=${result.msgId.msgId}, msg_data_id=${result.msgId.msgDataId}`);
     }
     return;
   }

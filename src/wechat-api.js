@@ -156,7 +156,7 @@ async function massSend(accessToken, mediaId) {
   const url = `https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token=${accessToken}`;
   const payload = {
     filter: {
-      is_to_all: true,
+      is_to_all: "true",
     },
     mpnews: {
       media_id: mediaId,
@@ -172,7 +172,7 @@ async function massSend(accessToken, mediaId) {
   if (!data.msg_id) {
     throw new Error(`Failed to mass send: ${response.text}`);
   }
-  return data.msg_id;
+  return { msgId: data.msg_id, msgDataId: data.msg_data_id };
 }
 
 module.exports = {
