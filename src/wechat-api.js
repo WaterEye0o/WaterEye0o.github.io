@@ -166,6 +166,7 @@ async function massSend(accessToken, mediaId) {
   };
   const response = await httpPostJson(url, payload);
   const data = JSON.parse(response.text);
+  console.log('==============message/mass/sendall',response.text)
   if (data.errcode) {
     throw new Error(`WeChat mass/sendall error ${data.errcode}: ${data.errmsg}`);
   }

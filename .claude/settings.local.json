@@ -13,7 +13,26 @@
       "Bash(ssh -i *)",
       "Skill(superpowers:systematic-debugging)",
       "Skill(superpowers:systematic-debugging:*)",
-      "Bash(gh secret *)"
+      "Bash(gh secret *)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io log --oneline -5 -- scripts/)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io status scripts/)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io show f3c25fd --stat)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io show c240994:scripts/test-wechat-api.js)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io log --oneline -10)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io ls-tree HEAD scripts/)",
+      "Bash(npm install *)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io show HEAD:scripts/)",
+      "Bash(npx hexo *)",
+      "Bash(rm /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io/scripts/test-wechat-api.js.tmp && npx hexo generate 2>&1 | head -10)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io status)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io add scripts/test-wechat-api.js.tmp)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io commit -m ' *)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io push origin master)",
+      "Bash(WECHAT_PROXY_URL=http://47.94.222.221:3010/api/publish-wechat-draft WECHAT_PROXY_SECRET=aaabin node src/main.js)",
+      "Bash(git -C /Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io add src/main.js)"
+    ],
+    "additionalDirectories": [
+      "/Users/wuhuabin/WorkSpace/project/WaterEye0o.github.io/scripts"
     ]
   }
 }

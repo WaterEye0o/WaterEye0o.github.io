@@ -92,7 +92,7 @@ async function handlePublish(body) {
     content,
     content_source_url: '',
     thumb_media_id: thumbMediaId,
-    need_open_comment: 0,
+    need_open_comment: 1,
     only_fans_can_comment: 0,
   };
 
