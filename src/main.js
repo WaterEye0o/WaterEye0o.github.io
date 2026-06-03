@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { polishArticle } = require('./polish-article');
+const { generateNewsArticle } = require('./news-article');
 const { generateMarkdown } = require('./generate-markdown');
 const { publishArticle } = require('./publish-to-wechat');
 
@@ -19,6 +20,60 @@ function getTodayArticlePath() {
   }
 
   return null;
+}
+
+/**
+ * 通过 Git 历史判断最近科普文章数量，决定今日文章类型
+ * @returns {'science' | 'news'} 文章类型
+ */
+function getArticleType() {
+  const configPath = path.join(__dirname, '..', 'config', 'prompts.json');
+  const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  const schedule = config.article_schedule || { science_count: 3, news_count: 1 };
+  const threshold = schedule.science_count;
+
+  // 读取 articles 目录下的文件，按日期排序
+  const articlesDir = path.join(__dirname, '..', 'articles');
+  if (!fs.existsSync(articlesDir)) {
+    return 'science';  // 没有文章时，默认生成科普
+  }
+
+  const files = fs.readdirSync(articlesDir)
+    .filter(f => f.endsWith('.md'))
+    .sort()
+    .reverse();  // 最新的在前
+
+  // 检查最近的文章的 topic，统计连续科普文章数量
+  let consecutiveScienceCount = 0;
+  for (const file of files) {
+    const filePath = path.join(articlesDir, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    // 从 frontmatter 提取 topic
+    const topicMatch = content.match(/^topic:\s*(.+)$/m);
+    if (topicMatch) {
+      const topic = topicMatch[1].trim();
+      if (topic.startsWith('新闻:')) {
+        // 遇到新闻，中断计数
+        break;
+      } else {
+        consecutiveScienceCount++;
+        if (consecutiveScienceCount >= threshold) {
+          // 已达到科普数量阈值，今日生成新闻
+          return 'news';
+        }
+      }
+    } else {
+      // 没有 topic 字段，假设是科普文章
+      consecutiveScienceCount++;
+      if (consecutiveScienceCount >= threshold) {
+        return 'news';
+      }
+    }
+  }
+
+  // 未达到阈值，生成科普
+  return 'science';
 }
 
 async function main() {
@@ -41,17 +96,38 @@ async function main() {
     process.exit(0);
   }
 
-  console.log('Step 1: Generating article via Kimi...');
+  // 判断今日文章类型
+  const articleType = getArticleType();
+  console.log(`Article type decision: ${articleType}`);
+
+  console.log('Step 1: Generating article...');
   let articleResult;
-  try {
-    articleResult = await polishArticle();
-  } catch (err) {
-    console.warn(`First AI API call failed: ${err.message}. Retrying...`);
+
+  if (articleType === 'news') {
+    // 生成新闻文章
+    try {
+      articleResult = await generateNewsArticle();
+    } catch (err) {
+      console.warn(`News generation failed: ${err.message}. Falling back to science article.`);
+      try {
+        articleResult = await polishArticle();
+      } catch (retryErr) {
+        console.error(`Fallback science generation also failed: ${retryErr.message}. Aborting.`);
+        process.exit(0);
+      }
+    }
+  } else {
+    // 生成科普文章
     try {
       articleResult = await polishArticle();
-    } catch (retryErr) {
-      console.error(`AI API retry also failed: ${retryErr.message}. Aborting.`);
-      process.exit(0);
+    } catch (err) {
+      console.warn(`First AI API call failed: ${err.message}. Retrying...`);
+      try {
+        articleResult = await polishArticle();
+      } catch (retryErr) {
+        console.error(`AI API retry also failed: ${retryErr.message}. Aborting.`);
+        process.exit(0);
+      }
     }
   }
 
