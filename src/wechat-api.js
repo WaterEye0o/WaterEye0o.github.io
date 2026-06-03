@@ -156,7 +156,7 @@ async function massSend(accessToken, mediaId) {
   const url = `https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token=${accessToken}`;
   const payload = {
     filter: {
-      is_to_all: "true",
+      is_to_all: true,
     },
     mpnews: {
       media_id: mediaId,
