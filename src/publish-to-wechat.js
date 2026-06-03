@@ -63,6 +63,28 @@ function applyInlineFormatting(text) {
   return text;
 }
 
+// 活泼可爱风格的样式配置
+const STYLE_CONFIG = {
+  // 全局容器样式
+  container: 'style="padding: 20px 15px; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, \'Helvetica Neue\', Arial, sans-serif; color: #333; line-height: 1.8; letter-spacing: 0.5px;"',
+  // 标题样式 - 活泼可爱风格
+  h2: 'style="font-size: 18px; font-weight: bold; color: #ff6b6b; background: linear-gradient(90deg, #fff5f5 0%, #ffe4e4 100%); padding: 12px 15px; margin: 25px 0 15px 0; border-radius: 10px; border-left: 4px solid #ff6b6b; box-shadow: 0 2px 8px rgba(255,107,107,0.1);"',
+  h3: 'style="font-size: 16px; font-weight: bold; color: #ffa94d; background: linear-gradient(90deg, #fff9f0 0%, #ffecb3 100%); padding: 10px 12px; margin: 20px 0 12px 0; border-radius: 8px; border-left: 3px solid #ffa94d;"',
+  h4: 'style="font-size: 15px; font-weight: bold; color: #69db7c; padding: 8px 10px; margin: 15px 0 10px 0; border-radius: 6px; background: #f0fff4;"',
+  // 段落样式
+  p: 'style="font-size: 15px; line-height: 1.8; margin: 12px 0; text-align: justify; color: #444;"',
+  // 图片样式
+  img: 'style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 15px 0;"',
+  // 图片说明样式
+  caption: 'style="text-align: center; color: #888; font-size: 13px; margin-top: 8px; padding: 5px; background: #f8f9fa; border-radius: 6px;"',
+  // 列表样式
+  ul: 'style="margin: 15px 0; padding-left: 20px; list-style-type: none;"',
+  ol: 'style="margin: 15px 0; padding-left: 20px; list-style-type: none;"',
+  li: 'style="margin: 8px 0; padding-left: 15px; position: relative; font-size: 15px; line-height: 1.7;"',
+  // 引用样式
+  quote: 'style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); padding: 15px 20px; margin: 15px 0; border-radius: 10px; font-style: italic; color: #666; border-left: 4px solid #7c4dff;"',
+};
+
 function convertContentToHtml(body, imageUrlMap) {
   let content = body;
   for (const [localPath, wechatUrl] of Object.entries(imageUrlMap)) {
@@ -72,6 +94,10 @@ function convertContentToHtml(body, imageUrlMap) {
 
   const lines = content.split('\n');
   const htmlLines = [];
+
+  // 添加全局容器开始
+  htmlLines.push(`<div ${STYLE_CONFIG.container}>`);
+
   let inList = false;
   let listType = null;
 
@@ -95,7 +121,12 @@ function convertContentToHtml(body, imageUrlMap) {
       const figureBlock = figureLines.join('\n');
       const imgMatch = figureBlock.match(/<img[^>]+>/);
       if (imgMatch) {
-        htmlLines.push(imgMatch[0]);
+        // 给图片添加样式
+        let imgTag = imgMatch[0];
+        if (!imgTag.includes('style=')) {
+          imgTag = imgTag.replace('<img', `<img ${STYLE_CONFIG.img}`);
+        }
+        htmlLines.push(imgTag);
       }
       const captionMatch = figureBlock.match(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/);
       if (captionMatch) {
@@ -105,7 +136,7 @@ function convertContentToHtml(body, imageUrlMap) {
           .replace(/<[^>]+>/g, '')
           .trim();
         if (caption) {
-          htmlLines.push(`<p style="text-align:center;color:#888;font-size:14px;margin-top:8px;">${caption}</p>`);
+          htmlLines.push(`<p ${STYLE_CONFIG.caption}>${caption}</p>`);
         }
       }
       if (inList) { htmlLines.push(`</${listType}>`); inList = false; listType = null; }
@@ -120,52 +151,54 @@ function convertContentToHtml(body, imageUrlMap) {
     if (trimmed.startsWith('<small>')) continue;
     if (trimmed.startsWith('</small>')) continue;
 
-    // Headings
+    // Headings - 活泼可爱风格
     if (line.startsWith('#### ')) {
       if (inList) { htmlLines.push(`</${listType}>`); inList = false; }
-      htmlLines.push(`<h4>${applyInlineFormatting(line.substring(5))}</h4>`);
+      htmlLines.push(`<h4 ${STYLE_CONFIG.h4}>${applyInlineFormatting(line.substring(5))}</h4>`);
       continue;
     }
     if (line.startsWith('### ')) {
       if (inList) { htmlLines.push(`</${listType}>`); inList = false; }
-      htmlLines.push(`<h3>${applyInlineFormatting(line.substring(4))}</h3>`);
+      htmlLines.push(`<h3 ${STYLE_CONFIG.h3}>${applyInlineFormatting(line.substring(4))}</h3>`);
       continue;
     }
     if (line.startsWith('## ')) {
       if (inList) { htmlLines.push(`</${listType}>`); inList = false; }
-      htmlLines.push(`<h2>${applyInlineFormatting(line.substring(3))}</h2>`);
+      htmlLines.push(`<h2 ${STYLE_CONFIG.h2}>${applyInlineFormatting(line.substring(3))}</h2>`);
       continue;
     }
 
-    // Blockquote
+    // Blockquote - 添加活泼样式
     if (line.startsWith('> ')) {
       if (inList) { htmlLines.push(`</${listType}>`); inList = false; }
-      htmlLines.push(`<p>${applyInlineFormatting(line.substring(2))}</p>`);
+      htmlLines.push(`<blockquote ${STYLE_CONFIG.quote}>${applyInlineFormatting(line.substring(2))}</blockquote>`);
       continue;
     }
 
-    // Unordered list
+    // Unordered list - 添加可爱的小圆点
     if (line.startsWith('- ')) {
       if (!inList || listType !== 'ul') {
         if (inList) htmlLines.push(`</${listType}>`);
-        htmlLines.push('<ul>');
+        htmlLines.push(`<ul ${STYLE_CONFIG.ul}>`);
         inList = true;
         listType = 'ul';
       }
-      htmlLines.push(`<li>${applyInlineFormatting(line.substring(2))}</li>`);
+      htmlLines.push(`<li ${STYLE_CONFIG.li}><span style="color: #ff6b6b; font-size: 16px; margin-right: 8px;">●</span>${applyInlineFormatting(line.substring(2))}</li>`);
       continue;
     }
 
-    // Ordered list
+    // Ordered list - 添加可爱的数字
     if (/^\d+\.\s/.test(line)) {
       if (!inList || listType !== 'ol') {
         if (inList) htmlLines.push(`</${listType}>`);
-        htmlLines.push('<ol>');
+        htmlLines.push(`<ol ${STYLE_CONFIG.ol}>`);
         inList = true;
         listType = 'ol';
       }
+      const numMatch = line.match(/^(\d+)\./);
+      const num = numMatch ? numMatch[1] : '1';
       const text = line.replace(/^\d+\.\s/, '');
-      htmlLines.push(`<li>${applyInlineFormatting(text)}</li>`);
+      htmlLines.push(`<li ${STYLE_CONFIG.li}><span style="background: linear-gradient(135deg, #ffa94d, #ff6b6b); color: #fff; font-weight: bold; font-size: 12px; padding: 2px 8px; border-radius: 10px; margin-right: 10px;">${num}</span>${applyInlineFormatting(text)}</li>`);
       continue;
     }
 
@@ -188,9 +221,14 @@ function convertContentToHtml(body, imageUrlMap) {
 
     // HTML tags (img, etc.) pass through without wrapping
     if (trimmed.startsWith('<')) {
-      htmlLines.push(trimmed);
+      // 给独立图片添加样式
+      if (trimmed.startsWith('<img') && !trimmed.includes('style=')) {
+        htmlLines.push(trimmed.replace('<img', `<img ${STYLE_CONFIG.img}`));
+      } else {
+        htmlLines.push(trimmed);
+      }
     } else {
-      htmlLines.push(`<p>${applyInlineFormatting(line)}</p>`);
+      htmlLines.push(`<p ${STYLE_CONFIG.p}>${applyInlineFormatting(line)}</p>`);
     }
   }
 
@@ -198,7 +236,10 @@ function convertContentToHtml(body, imageUrlMap) {
     htmlLines.push(`</${listType}>`);
   }
 
-  return htmlLines.join('');
+  // 关闭全局容器
+  htmlLines.push('</div>');
+
+  return htmlLines.join('\n');
 }
 
 async function publishViaProxy(articlePath) {
