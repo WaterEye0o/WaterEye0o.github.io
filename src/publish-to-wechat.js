@@ -202,22 +202,24 @@ function convertContentToHtml(body, imageUrlMap) {
 }
 
 async function publishViaProxy(articlePath) {
+  console.log('\n========== publishViaProxy 开始 ==========');
   const proxyUrl = process.env.WECHAT_PROXY_URL;
   const proxySecret = process.env.WECHAT_PROXY_SECRET;
+  console.log('[代理URL]', proxyUrl);
 
   if (!proxySecret) {
     throw new Error('WECHAT_PROXY_SECRET is required when using WECHAT_PROXY_URL');
   }
 
   const article = parseArticle(articlePath);
-  console.log(`  Title: ${article.title}`);
-  console.log(`  Images: ${article.localImages.length}`);
+  console.log('[文章标题]', article.title);
+  console.log('[图片数量]', article.localImages.length);
 
   const imageFiles = [];
   for (const relativePath of article.localImages) {
     const localPath = path.join(__dirname, '..', relativePath);
     if (!fs.existsSync(localPath)) {
-      console.warn(`    Image not found: ${localPath}`);
+      console.warn('[警告] 图片不存在:', localPath);
       continue;
     }
     const data = fs.readFileSync(localPath).toString('base64');
@@ -226,6 +228,7 @@ async function publishViaProxy(articlePath) {
       filename: path.basename(localPath),
       data,
     });
+    console.log('[图片准备]', relativePath);
   }
 
   const content = convertContentToHtml(article.body, {});
@@ -237,6 +240,12 @@ async function publishViaProxy(articlePath) {
     imageFiles,
     publish: process.env.WECHAT_DIRECT_PUBLISH === 'true',
   };
+  console.log('\n[发送请求参数]');
+  console.log('  title:', payload.title);
+  console.log('  author:', payload.author);
+  console.log('  imageFiles count:', payload.imageFiles.length);
+  console.log('  publish (是否群发):', payload.publish);
+  console.log('  WECHAT_DIRECT_PUBLISH 环境变量:', process.env.WECHAT_DIRECT_PUBLISH);
 
   const postData = JSON.stringify(payload);
   const url = new URL(proxyUrl);
@@ -254,26 +263,37 @@ async function publishViaProxy(articlePath) {
         'Content-Length': Buffer.byteLength(postData),
       },
     };
+    console.log('\n[HTTP请求]', options.hostname + ':' + options.port + options.path);
 
     const req = client.request(options, (res) => {
+      console.log('[HTTP响应状态码]', res.statusCode);
       const chunks = [];
       res.on('data', (chunk) => chunks.push(chunk));
       res.on('end', () => {
         const text = Buffer.concat(chunks).toString('utf-8');
+        console.log('[HTTP响应内容]', text);
         try {
           const data = JSON.parse(text);
           if (!data.success) {
+            console.log('[错误] 代理返回失败:', data.error);
             reject(new Error(data.error || 'Proxy publish failed'));
           } else {
+            console.log('\n========== publishViaProxy 成功 ==========');
+            console.log('[结果] mediaId:', data.mediaId);
+            console.log('[结果] msgId:', JSON.stringify(data.msgId));
             resolve(data);
           }
         } catch (e) {
+          console.log('[错误] 解析响应失败:', text);
           reject(new Error(`Invalid proxy response: ${text}`));
         }
       });
     });
 
-    req.on('error', reject);
+    req.on('error', (err) => {
+      console.log('[错误] HTTP请求失败:', err.message);
+      reject(err);
+    });
     req.write(postData);
     req.end();
   });

@@ -164,15 +164,26 @@ async function massSend(accessToken, mediaId) {
     msgtype: 'mpnews',
     send_ignore_reprint: 0,
   };
+  console.log('\n========== massSend 群发请求 ==========');
+  console.log('[请求URL]', url);
+  console.log('[请求参数]', JSON.stringify(payload, null, 2));
+
   const response = await httpPostJson(url, payload);
+  console.log('[响应原始数据]', response.text);
+
   const data = JSON.parse(response.text);
-  console.log('==============message/mass/sendall',response.text)
+  console.log('[解析后数据]', JSON.stringify(data, null, 2));
+
   if (data.errcode) {
+    console.log('[错误] errcode:', data.errcode, 'errmsg:', data.errmsg);
     throw new Error(`WeChat mass/sendall error ${data.errcode}: ${data.errmsg}`);
   }
   if (!data.msg_id) {
+    console.log('[错误] 缺少 msg_id');
     throw new Error(`Failed to mass send: ${response.text}`);
   }
+  console.log('[成功] msg_id:', data.msg_id, 'msg_data_id:', data.msg_data_id);
+  console.log('========== massSend 群发完成 ==========\n');
   return { msgId: data.msg_id, msgDataId: data.msg_data_id };
 }
 
