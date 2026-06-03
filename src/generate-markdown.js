@@ -30,12 +30,17 @@ async function generateMarkdown(articleResult) {
   console.log('Step 3: Searching and downloading images...');
   const contentWithImages = await processImagesInArticle(articleResult.content, slug);
 
+  // 根据 topic 类型设置不同的 tags
+  const tags = articleResult.topic.startsWith('新闻:')
+    ? '[宠物热点, 新闻]'
+    : '[宠物健康, 科普]';
+
   const frontMatter = [
     '---',
     `title: ${title}`,
     `date: ${today}`,
     `topic: ${articleResult.topic}`,
-    `tags: [宠物健康, 科普]`,
+    `tags: ${tags}`,
     '---',
     '',
   ].join('\n');
