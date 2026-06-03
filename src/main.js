@@ -27,10 +27,16 @@ function getTodayArticlePath() {
  * @returns {'science' | 'news'} 文章类型
  */
 function getArticleType() {
-  const configPath = path.join(__dirname, '..', 'config', 'prompts.json');
-  const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-  const schedule = config.article_schedule || { science_count: 3, news_count: 1 };
-  const threshold = schedule.science_count;
+  let threshold;
+  try {
+    const configPath = path.join(__dirname, '..', 'config', 'prompts.json');
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    const schedule = config.article_schedule || { science_count: 3, news_count: 1 };
+    threshold = schedule.science_count;
+  } catch (err) {
+    console.warn(`Failed to read article schedule config: ${err.message}. Using default threshold=3.`);
+    threshold = 3;
+  }
 
   // 读取 articles 目录下的文件，按日期排序
   const articlesDir = path.join(__dirname, '..', 'articles');
