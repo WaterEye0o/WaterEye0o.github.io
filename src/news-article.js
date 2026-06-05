@@ -42,11 +42,17 @@ async function generateNewsArticle() {
 
   const content = response.choices[0].message.content;
 
-  // 从标题中提取新闻主题（去除【宠物热点】前缀）
+  // 从标题中提取新闻主题（支持两种格式：有 # 或没有 #）
   let topic = '新闻:未知话题';
-  const titleMatch = content.match(/^#\s*【宠物热点】(.+)/m);
-  if (titleMatch) {
-    topic = `新闻:${titleMatch[1].trim()}`;
+  // 格式1: # 【宠物热点】xxx
+  const titleMatch1 = content.match(/^#\s*【宠物热点】(.+)/m);
+  // 格式2: 【宠物热点】xxx（没有 # 前缀）
+  const titleMatch2 = content.match(/^【宠物热点】(.+)/m);
+
+  if (titleMatch1) {
+    topic = `新闻:${titleMatch1[1].trim()}`;
+  } else if (titleMatch2) {
+    topic = `新闻:${titleMatch2[1].trim()}`;
   }
 
   console.log('DeepSeek API news article generation completed successfully');

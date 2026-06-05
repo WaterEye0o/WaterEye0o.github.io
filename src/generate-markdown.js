@@ -13,8 +13,13 @@ function extractTitleFromPolished(polishedContent) {
   const lines = polishedContent.split('\n');
   for (const line of lines) {
     const trimmed = line.trim();
+    // 格式1: # xxx（标准 markdown 标题）
     if (trimmed.startsWith('# ') && trimmed.length > 2) {
       return trimmed.substring(2);
+    }
+    // 格式2: 【宠物热点】xxx（新闻文章可能没有 # 前缀）
+    if (trimmed.startsWith('【宠物热点】') && trimmed.length > 8) {
+      return trimmed;
     }
   }
   return 'untitled';
