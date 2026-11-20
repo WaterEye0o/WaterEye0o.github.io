@@ -9,19 +9,66 @@ function sanitizeFilename(title) {
     .substring(0, 50);
 }
 
+// 成对出现的标题包裹符号：模型常把标题写成 「【宠物热点】xxx」 这类形式。
+// 注意不包含【】，否则会把标题前缀本身剥掉。
+const WRAP_PAIRS = [
+  ['「', '」'], ['『', '』'], ['《', '》'], ['〈', '〉'],
+  ['“', '”'], ['‘', '’'], ['"', '"'], ["'", "'"],
+];
+
+// 反复剥掉行首行尾的包裹符号（书名号/引号/Markdown 加粗/行内代码）
+function unwrapTitle(text) {
+  let result = text.trim();
+  let changed = true;
+
+  while (changed && result.length > 0) {
+    changed = false;
+
+    for (const [open, close] of WRAP_PAIRS) {
+      if (result.startsWith(open) && result.endsWith(close) && result.length > open.length + close.length) {
+        result = result.substring(open.length, result.length - close.length).trim();
+        changed = true;
+      }
+    }
+
+    if (result.length > 4 && result.startsWith('**') && result.endsWith('**')) {
+      result = result.substring(2, result.length - 2).trim();
+      changed = true;
+    } else if (result.length > 2 && (result.startsWith('*') || result.startsWith('`')) && (result.endsWith('*') || result.endsWith('`'))) {
+      result = result.substring(1, result.length - 1).trim();
+      changed = true;
+    }
+  }
+
+  return result;
+}
+
 function extractTitleFromPolished(polishedContent) {
   const lines = polishedContent.split('\n');
   for (const line of lines) {
-    const trimmed = line.trim();
-    // 格式1: # xxx（标准 markdown 标题）
-    if (trimmed.startsWith('# ') && trimmed.length > 2) {
-      return trimmed.substring(2);
+    const unwrapped = unwrapTitle(line);
+    if (!unwrapped) {
+      continue;
     }
+
+    // 格式1: # xxx（标准 markdown 标题，标题文字本身可能再被 「」 或 ** 包裹）
+    const heading = unwrapped.match(/^#{1,6}\s+(.+)$/);
+    if (heading) {
+      const title = unwrapTitle(heading[1]);
+      if (title.length > 1) {
+        return title;
+      }
+    }
+
     // 格式2: 【宠物热点】xxx（新闻文章可能没有 # 前缀）
-    if (trimmed.startsWith('【宠物热点】') && trimmed.length > 8) {
-      return trimmed;
+    if (unwrapped.startsWith('【宠物热点】') && unwrapped.length > 8) {
+      const head = '【宠物热点】';
+      const tail = unwrapTitle(unwrapped.substring(head.length));
+      return tail ? `${head}${tail}` : unwrapped;
     }
   }
+
+  console.warn(`Failed to extract title from article, falling back to "untitled". First line: ${JSON.stringify((lines[0] || '').trim().substring(0, 60))}`);
   return 'untitled';
 }
 

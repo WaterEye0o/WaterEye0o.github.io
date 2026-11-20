@@ -5,6 +5,12 @@ const { generateNewsArticle } = require('./news-article');
 const { generateMarkdown } = require('./generate-markdown');
 const { publishArticle } = require('./publish-to-wechat');
 
+const RETRY_DELAY_MS = 5000;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function getTodayArticlePath() {
   const articlesDir = path.join(__dirname, '..', 'articles');
   const today = new Date().toISOString().split('T')[0];
@@ -115,11 +121,12 @@ async function main() {
       articleResult = await generateNewsArticle();
     } catch (err) {
       console.warn(`News generation failed: ${err.message}. Falling back to science article.`);
+      await sleep(RETRY_DELAY_MS);
       try {
         articleResult = await polishArticle();
       } catch (retryErr) {
         console.error(`Fallback science generation also failed: ${retryErr.message}. Aborting.`);
-        process.exit(0);
+        process.exit(1);
       }
     }
   } else {
@@ -127,12 +134,13 @@ async function main() {
     try {
       articleResult = await polishArticle();
     } catch (err) {
-      console.warn(`First AI API call failed: ${err.message}. Retrying...`);
+      console.warn(`First AI generation call failed: ${err.message}. Retrying...`);
+      await sleep(RETRY_DELAY_MS);
       try {
         articleResult = await polishArticle();
       } catch (retryErr) {
-        console.error(`AI API retry also failed: ${retryErr.message}. Aborting.`);
-        process.exit(0);
+        console.error(`AI generation retry also failed: ${retryErr.message}. Aborting.`);
+        process.exit(1);
       }
     }
   }
@@ -152,6 +160,6 @@ async function main() {
 
 main().catch((err) => {
   console.error(`Fatal error: ${err.message}`);
-  console.error('No article generated today. Skipping without failing the workflow.');
-  process.exit(0);
+  console.error('No article generated today. Failing the workflow.');
+  process.exit(1);
 });

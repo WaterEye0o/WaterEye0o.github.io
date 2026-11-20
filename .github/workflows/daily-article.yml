@@ -24,11 +24,48 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Install qodercn CLI
+        run: |
+          curl -fsSL https://static.qoder.com.cn/qoder-cli-cn/install.sh | bash
+
+          # 官方文档未写明 Linux 下的安装目录，逐个候选路径探测，找不到再全局搜索
+          BIN_DIR=""
+          for dir in "$HOME/.local/bin" "$HOME/.qodercn/bin" "$HOME/.qoder-cn/bin" /usr/local/bin; do
+            if [ -x "$dir/qodercn" ]; then BIN_DIR="$dir"; break; fi
+          done
+          if [ -z "$BIN_DIR" ]; then
+            FOUND_BIN="$(find "$HOME" -maxdepth 5 -type f -name qodercn 2>/dev/null | head -n 1)"
+            if [ -n "$FOUND_BIN" ]; then BIN_DIR="$(dirname "$FOUND_BIN")"; fi
+          fi
+          if [ -z "$BIN_DIR" ]; then
+            echo "::error::qodercn 安装后未找到可执行文件，请检查 install.sh 的输出"
+            exit 1
+          fi
+
+          echo "$BIN_DIR" >> "$GITHUB_PATH"
+          "$BIN_DIR/qodercn" --version
+
+      - name: Configure qodercn CLI for CI
+        run: |
+          # 关闭自动更新、预先信任工作区，避免 headless 调用被更新流程或目录信任打断。
+          # 配置项见 https://docs.qoder.cn/cli/settings-reference：
+          # general.enableAutoUpdate / security.folderTrust.enabled / permissions.trustDirectories（用户级配置）
+          CONFIG_DIR="${QODERCN_CONFIG_DIR:-$HOME/.qoder-cn}"
+          mkdir -p "$CONFIG_DIR"
+          cat > "$CONFIG_DIR/settings.json" <<SETTINGS
+          {
+            "general": { "enableAutoUpdate": false },
+            "security": { "folderTrust": { "enabled": true } },
+            "permissions": { "trustDirectories": ["${{ github.workspace }}"] }
+          }
+          SETTINGS
+          cat "$CONFIG_DIR/settings.json"
+
       - run: npm ci
 
       - run: node src/main.js
         env:
-          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          QODERCN_PERSONAL_ACCESS_TOKEN: ${{ secrets.QODERCN_PERSONAL_ACCESS_TOKEN }}
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           WECHAT_PROXY_URL: ${{ secrets.WECHAT_PROXY_URL }}
           WECHAT_PROXY_SECRET: ${{ secrets.WECHAT_PROXY_SECRET }}
